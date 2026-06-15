@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skillprofiel - Skilld</title>
+  <style>
+    :root {
+      --skilld-navy: #0e1f3d;
+      --skilld-purple: #6354c4;
+      --skilld-purple-light: #8478d6;
+      --skilld-yellow: #fbd424;
+      --skilld-teal: #6fc1b7;
+      --skilld-pink: #e7a4c9;
+      --skilld-text: #1a1a1a;
+      --skilld-muted: #6b7280;
+      --skilld-light: #f7f8fb;
+      --skilld-border: #e5e7eb;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--skilld-text);
+      line-height: 1.55;
+      background: #fff;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ===== Top header ===== */
+    header {
+      background: #fff;
+      border-bottom: 1px solid var(--skilld-border);
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--skilld-navy);
+    }
+    .brand-dot {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--skilld-navy);
+      color: #fff;
+      font-size: 0.7rem;
+    }
+    .nav-tabs { display: flex; gap: 2rem; }
+    .nav-tab {
+      font-weight: 600;
+      color: var(--skilld-muted);
+      padding: 0.5rem 0;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .nav-tab.active {
+      color: var(--skilld-purple);
+      border-bottom-color: var(--skilld-purple);
+    }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .lang-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.9rem;
+      border: 1px solid var(--skilld-border);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #d1d5db;
+    }
+
+    /* ===== Page layout ===== */
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 6rem;
+    }
+    .page-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--skilld-purple);
+      margin-bottom: 1.5rem;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* ===== Cards ===== */
+    .card {
+      background: #fff;
+      border: 1px solid var(--skilld-border);
+      border-radius: 14px;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: border-color 0.3s;
+    }
+    .card.just-updated {
+      animation: pulse 1.6s ease-out;
+    }
+    @keyframes pulse {
+      0% { border-color: var(--skilld-purple); box-shadow: 0 0 0 0 rgba(99,84,196,0.35); }
+      70% { box-shadow: 0 0 0 12px rgba(99,84,196,0); }
+      100% { border-color: var(--skilld-border); }
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--skilld-purple);
+    }
+    .btn-edit {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #f3f4f6;
+      color: var(--skilld-text);
+      border: none;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .btn-edit:hover { background: #e5e7eb; }
+
+    /* NAW card */
+    .naw {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .naw-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #d1d5db;
+      flex-shrink: 0;
+    }
+    .naw-info { flex: 1; }
+    .naw-name {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--skilld-navy);
+      margin-bottom: 0.2rem;
+    }
+    .naw-name.empty { color: #9ca3af; font-style: italic; font-weight: 600; font-size: 1.2rem; }
+    .naw-meta { color: var(--skilld-muted); font-size: 0.95rem; }
+
+    /* Skill rows */
+    .skill-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 0;
+      border-top: 1px solid var(--skilld-border);
+      animation: slideIn 0.4s ease-out;
+    }
+    .skill-row:first-child { border-top: none; }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .skill-name {
+      font-size: 1rem;
+      color: var(--skilld-navy);
+      font-weight: 500;
+    }
+    .stars {
+      display: flex;
+      gap: 0.2rem;
+    }
+    .star {
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: #d1d5db;
+      transition: transform 0.15s;
+      user-select: none;
+    }
+    .star.filled { color: var(--skilld-yellow); }
+    .star:hover { transform: scale(1.15); }
+
+    /* Werkervaring / opleiding rows */
+    .entry-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      border-top: 1px solid var(--skilld-border);
+      animation: slideIn 0.4s ease-out;
+    }
+    .entry-row:first-child { border-top: none; }
+    .entry-title {
+      font-weight: 700;
+      color: var(--skilld-navy);
+      font-size: 1rem;
+      margin-bottom: 0.15rem;
+    }
+    .entry-sub {
+      color: var(--skilld-muted);
+      font-size: 0.9rem;
+    }
+    .entry-date {
+      color: var(--skilld-muted);
+      font-size: 0.95rem;
+      white-space: nowrap;
+    }
+    .opleiding-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr auto;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      border-top: 1px solid var(--skilld-border);
+      animation: slideIn 0.4s ease-out;
+    }
+    .opleiding-row:first-child { border-top: none; }
+
+    .empty-state {
+      color: #9ca3af;
+      font-style: italic;
+      padding: 0.5rem 0;
+    }
+
+    /* Talen */
+    .talen-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .taal-chip {
+      background: #f3f4f6;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-weight: 500;
+      animation: slideIn 0.4s ease-out;
+    }
+    .taal-chip strong { color: var(--skilld-navy); }
+    .taal-chip span { color: var(--skilld-muted); margin-left: 0.5rem; font-size: 0.88rem; }
+
+    /* Wensberoepen */
+    .wens-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    .wens-chip {
+      background: var(--skilld-purple);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-weight: 600;
+      animation: slideIn 0.4s ease-out;
+    }
+
+    /* ===== Sidebar ===== */
+    .sidebar { position: sticky; top: 1.5rem; }
+    .progress-card {
+      background: var(--skilld-purple);
+      color: #fff;
+      border-radius: 16px;
+      padding: 1.75rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .progress-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .progress-pct { font-size: 1.5rem; font-weight: 800; }
+    .progress-bar {
+      height: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #fff;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .progress-list { list-style: none; }
+    .progress-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      font-size: 0.98rem;
+      transition: opacity 0.3s;
+    }
+    .progress-item:not(.done) { opacity: 0.65; }
+    .progress-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      transition: all 0.4s;
+    }
+    .progress-item.done .progress-check {
+      background: #fff;
+      color: var(--skilld-purple);
+      transform: scale(1.05);
+    }
+
+    .wensberoep-card {
+      background: var(--skilld-teal);
+      color: var(--skilld-navy);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+    .wensberoep-card h3 {
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 0.4rem;
+    }
+    .wensberoep-card p {
+      font-size: 0.9rem;
+    }
+
+    /* ===== Bottom action bar ===== */
+    .action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1px solid var(--skilld-border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      z-index: 50;
+    }
+    .btn-primary {
+      background: var(--skilld-purple);
+      color: #fff;
+      border: none;
+      padding: 0.85rem 1.8rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .btn-secondary {
+      background: #fff;
+      color: var(--skilld-navy);
+      border: 2px solid var(--skilld-navy);
+      padding: 0.85rem 1.8rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .btn-reset {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 200;
+      opacity: 0.6;
+    }
+    .btn-reset:hover { opacity: 1; }
+
+    /* Connection indicator */
+    .conn-indicator {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #fff;
+      border: 1px solid var(--skilld-border);
+      border-radius: 999px;
+      padding: 0.35rem 0.8rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--skilld-muted);
+      z-index: 200;
+    }
+    .conn-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d1d5db;
+    }
+    .conn-dot.connected { background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.2); }
+
+    @media (max-width: 980px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+    }
+
+    /* ===== Stellar widget kleuren via CSS-variabelen (Shadow DOM erfelijk) ===== */
+    stellar-chat-widget {
+      --primary: #6354c4;
+      --surface-raised: #d4ede9;
+      --surface: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="conn-indicator" id="conn">
+    <span class="conn-dot" id="connDot"></span>
+    <span id="connText">Verbinden…</span>
+  </div>
+  <button class="btn-reset" onclick="resetDemo()">Reset demo</button>
+
+  <header>
+    <div class="header-left">
+      <div class="brand">
+        <img src="https://skilld.nl/wp-content/uploads/2024/03/skilld_RGB_logo_pos.svg" alt="Skilld" style="height: 32px; display: block;">
+      </div>
+      <nav class="nav-tabs">
+        <a href="#" class="nav-tab active">Skillsprofiel</a>
+        <a href="#" class="nav-tab">Vacatures</a>
+      </nav>
+    </div>
+    <div class="header-right">
+      <div class="lang-pill">🌐 NL</div>
+      <div class="avatar"></div>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1 class="page-title">Jouw skillsprofiel</h1>
+
+    <div class="layout">
+      <div class="content">
+
+        <!-- NAW -->
+        <section class="card" id="card-naw">
+          <div class="naw">
+            <div class="naw-avatar"></div>
+            <div class="naw-info">
+              <div class="naw-name empty" id="naw-name">Nog niet bekend</div>
+              <div class="naw-meta" id="naw-email"></div>
+              <div class="naw-meta" id="naw-location"></div>
+            </div>
+            <button class="btn-edit">✎ Wijzigen</button>
+          </div>
+        </section>
+
+        <!-- Kennis & vaardigheden -->
+        <section class="card" id="card-kennis">
+          <div class="card-header">
+            <h2 class="card-title">Kennis en vaardigheden</h2>
+            <button class="btn-edit">✎ Wijzigen</button>
+          </div>
+          <div id="kennis-list">
+            <div class="empty-state">Nog geen vaardigheden toegevoegd</div>
+          </div>
+        </section>
+
+        <!-- Talen -->
+        <section class="card" id="card-talen">
+          <div class="card-header">
+            <h2 class="card-title">Talen</h2>
+            <button class="btn-edit">✎ Wijzigen</button>
+          </div>
+          <div id="talen-list" class="talen-list">
+            <div class="empty-state">Nog geen talen toegevoegd</div>
+          </div>
+        </section>
+
+        <!-- Werkervaring -->
+        <section class="card" id="card-werkervaring">
+          <div class="card-header">
+            <h2 class="card-title">Werkervaring</h2>
+            <button class="btn-edit">✎ Wijzigen</button>
+          </div>
+          <div id="werkervaring-list">
+            <div class="empty-state">Nog geen werkervaring toegevoegd</div>
+          </div>
+        </section>
+
+        <!-- Opleidingen -->
+        <section class="card" id="card-opleidingen">
+          <div class="card-header">
+            <h2 class="card-title">Opleidingen</h2>
+            <button class="btn-edit">✎ Wijzigen</button>
+          </div>
+          <div id="opleidingen-list">
+            <div class="empty-state">Nog geen opleidingen toegevoegd</div>
+          </div>
+        </section>
+
+        <!-- Wensberoepen -->
+        <section class="card" id="card-wensberoepen">
+          <div class="card-header">
+            <h2 class="card-title">Wensberoepen</h2>
+            <button class="btn-edit">✎ Wijzigen</button>
+          </div>
+          <div id="wensberoepen-list" class="wens-list">
+            <div class="empty-state">Nog geen wensberoepen toegevoegd</div>
+          </div>
+        </section>
+
+      </div>
+
+      <aside class="sidebar">
+        <div class="progress-card">
+          <div class="progress-header">
+            <span>Maak je profiel compleet met:</span>
+            <span class="progress-pct" id="progress-pct">0%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+          <ul class="progress-list" id="progress-list">
+            <li class="progress-item" data-key="naw">
+              <span>Algemene informatie</span>
+              <span class="progress-check">✓</span>
+            </li>
+            <li class="progress-item" data-key="kennis">
+              <span>Kennis en vaardigheden</span>
+              <span class="progress-check">✓</span>
+            </li>
+            <li class="progress-item" data-key="talen">
+              <span>Talen</span>
+              <span class="progress-check">✓</span>
+            </li>
+            <li class="progress-item" data-key="werkervaring">
+              <span>Werkervaring</span>
+              <span class="progress-check">✓</span>
+            </li>
+            <li class="progress-item" data-key="opleidingen">
+              <span>Opleidingen</span>
+              <span class="progress-check">✓</span>
+            </li>
+            <li class="progress-item" data-key="wensberoepen">
+              <span>Wensberoepen</span>
+              <span class="progress-check">✓</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="wensberoep-card" id="wens-sidebar" style="display:none;">
+          <h3>Wensberoep</h3>
+          <p id="wens-sidebar-text"></p>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div class="action-bar">
+    <button class="btn-primary">+ Skills toevoegen</button>
+    <button class="btn-secondary">↗ Deel</button>
+  </div>
+
+  <!-- ============ Stellar Chat Widget ============ -->
+  <script src="https://platform.stellarcs.ai/v1/chat/widget/chat-widget.js"></script>
+  <script>
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(({ agentId, token }) => {
+        new StellarChat({
+          agentId,
+          token,
+          entryPoint: "AI",
+          language: "en",
+          primaryColor: "#6354c4",
+          title: "Job, Skillprofiel Builder",
+          position: "bottom-right",
+          strings: {
+            welcomeAI: "Ik ben Job, laten we samen jouw skillprofiel opbouwen!",
+            placeholder: "Laten we beginnen!",
+            statusOnline: "Online"
+          }
+        });
+      })
+      .catch(err => console.error('Kon Stellar config niet laden:', err));
+  </script>
+
+  <!-- ============ Live update logica ============ -->
+  <script>
+    // ----- Connectie-indicator -----
+    const connDot = document.getElementById('connDot');
+    const connText = document.getElementById('connText');
+
+    // ----- State (welke secties hebben data) -----
+    const completed = new Set();
+
+    function markCompleted(key) {
+      completed.add(key);
+      const item = document.querySelector(`.progress-item[data-key="${key}"]`);
+      if (item) item.classList.add('done');
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const total = 6;
+      const pct = Math.round((completed.size / total) * 100);
+      document.getElementById('progress-pct').textContent = pct + '%';
+      document.getElementById('progress-fill').style.width = pct + '%';
+    }
+
+    function pulseCard(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('just-updated');
+      void el.offsetWidth; // force reflow zodat animatie opnieuw start
+      el.classList.add('just-updated');
+    }
+
+    // ----- Sterren-renderer -----
+    function renderStars(rating, onChange) {
+      const wrap = document.createElement('div');
+      wrap.className = 'stars';
+      for (let i = 1; i <= 5; i++) {
+        const s = document.createElement('span');
+        s.className = 'star' + (i <= rating ? ' filled' : '');
+        s.textContent = '★';
+        s.dataset.value = i;
+        s.addEventListener('click', () => {
+          rating = i;
+          [...wrap.children].forEach((c, idx) => {
+            c.classList.toggle('filled', idx < rating);
+          });
+          if (onChange) onChange(rating);
+        });
+        wrap.appendChild(s);
+      }
+      return wrap;
+    }
+
+    // ----- Section handlers -----
+    const handlers = {
+      naw(data) {
+        const name = [data.first_name, data.last_name].filter(Boolean).join(' ') || data.name || '';
+        const nameEl = document.getElementById('naw-name');
+        if (name) {
+          nameEl.textContent = name;
+          nameEl.classList.remove('empty');
+        }
+        if (data.email) document.getElementById('naw-email').textContent = data.email;
+        const meta = [];
+        if (data.location) meta.push(data.location);
+        if (data.age) meta.push(data.age + ' jaar oud');
+        if (meta.length) document.getElementById('naw-location').textContent = meta.join(', ');
+        markCompleted('naw');
+        pulseCard('card-naw');
+      },
+
+      kennis(data) {
+        const skills = data.skills || [];
+        if (!skills.length) return;
+        const list = document.getElementById('kennis-list');
+        list.innerHTML = '';
+        skills.forEach(skill => {
+          const name = typeof skill === 'string' ? skill : skill.name;
+          const rating = typeof skill === 'object' && skill.rating ? skill.rating : 3;
+          const row = document.createElement('div');
+          row.className = 'skill-row';
+          const label = document.createElement('div');
+          label.className = 'skill-name';
+          label.textContent = name;
+          row.appendChild(label);
+          row.appendChild(renderStars(rating));
+          list.appendChild(row);
+        });
+        markCompleted('kennis');
+        pulseCard('card-kennis');
+      },
+
+      softskills(data) {
+        // Soft skills sectie is uit de UI gehaald — handler doet niets meer.
+        // De action en endpoint bestaan nog, maar er wordt geen kaart gerenderd.
+        // (Set-and-forget: laat staan voor het geval Soft skills later weer terugkomt.)
+        const skills = data.skills || [];
+        if (!skills.length) return;
+        const list = document.getElementById('softskills-list');
+        if (!list) return; // UI niet aanwezig, klaar
+        list.innerHTML = '';
+        skills.forEach(skill => {
+          const name = typeof skill === 'string' ? skill : skill.name;
+          const rating = typeof skill === 'object' && skill.rating ? skill.rating : 3;
+          const row = document.createElement('div');
+          row.className = 'skill-row';
+          const label = document.createElement('div');
+          label.className = 'skill-name';
+          label.textContent = name;
+          row.appendChild(label);
+          row.appendChild(renderStars(rating));
+          list.appendChild(row);
+        });
+        markCompleted('softskills');
+        pulseCard('card-softskills');
+      },
+
+      talen(data) {
+        const talen = data.talen || data.languages || [];
+        if (!talen.length) return;
+        const list = document.getElementById('talen-list');
+        list.innerHTML = '';
+        talen.forEach(t => {
+          const chip = document.createElement('div');
+          chip.className = 'taal-chip';
+          if (typeof t === 'string') {
+            chip.innerHTML = `<strong>${t}</strong>`;
+          } else {
+            chip.innerHTML = `<strong>${t.taal || t.language || t.name}</strong>` +
+              (t.niveau || t.level ? `<span>${t.niveau || t.level}</span>` : '');
+          }
+          list.appendChild(chip);
+        });
+        markCompleted('talen');
+        pulseCard('card-talen');
+      },
+
+      werkervaring(data) {
+        const jobs = data.jobs || data.werkervaring || [];
+        if (!jobs.length) return;
+        const list = document.getElementById('werkervaring-list');
+        list.innerHTML = '';
+        jobs.forEach(job => {
+          const row = document.createElement('div');
+          row.className = 'entry-row';
+          const left = document.createElement('div');
+          left.innerHTML = `
+            <div class="entry-title">${job.title || job.beroep || job.functie || ''}</div>
+            <div class="entry-sub">${job.company || job.werkgever || ''}</div>
+          `;
+          const date = document.createElement('div');
+          date.className = 'entry-date';
+          const from = job.from || job.start || '';
+          const to = job.to || job.end || job.eind || 'heden';
+          date.textContent = from && to ? `${from} – ${to}` : (from || to);
+          row.appendChild(left);
+          row.appendChild(date);
+          list.appendChild(row);
+        });
+        markCompleted('werkervaring');
+        pulseCard('card-werkervaring');
+      },
+
+      opleidingen(data) {
+        const opleidingen = data.opleidingen || data.educations || [];
+        if (!opleidingen.length) return;
+        const list = document.getElementById('opleidingen-list');
+        list.innerHTML = '';
+        opleidingen.forEach(o => {
+          const row = document.createElement('div');
+          row.className = 'opleiding-row';
+          row.innerHTML = `
+            <div>
+              <div class="entry-title">${o.instituut || o.institution || ''}</div>
+              <div class="entry-sub">${o.opleiding || o.study || ''}</div>
+            </div>
+            <div class="entry-sub">${o.niveau || o.level || ''}</div>
+            <div class="entry-date">${o.from || ''}${o.to ? ' – ' + o.to : ''}</div>
+          `;
+          list.appendChild(row);
+        });
+        markCompleted('opleidingen');
+        pulseCard('card-opleidingen');
+      },
+
+      wensberoepen(data) {
+        const wensen = data.wensberoepen || data.wishes || [];
+        if (!wensen.length) return;
+        const list = document.getElementById('wensberoepen-list');
+        list.innerHTML = '';
+        wensen.forEach(w => {
+          const chip = document.createElement('div');
+          chip.className = 'wens-chip';
+          chip.textContent = typeof w === 'string' ? w : w.name || w.beroep;
+          list.appendChild(chip);
+        });
+        // Sidebar-kaartje
+        const side = document.getElementById('wens-sidebar');
+        side.style.display = 'block';
+        document.getElementById('wens-sidebar-text').textContent = wensen
+          .map(w => typeof w === 'string' ? w : (w.name || w.beroep)).join(', ');
+
+        markCompleted('wensberoepen');
+        pulseCard('card-wensberoepen');
+      },
+    };
+
+    // Aliases voor flexibiliteit in section-namen
+    const aliases = {
+      'general': 'naw',
+      'algemeen': 'naw',
+      'algemene_informatie': 'naw',
+      'skills': 'kennis',
+      'kennis_vaardigheden': 'kennis',
+      'soft_skills': 'softskills',
+      'softskill': 'softskills',
+      'languages': 'talen',
+      'talen': 'talen',
+      'experience': 'werkervaring',
+      'werkervaring': 'werkervaring',
+      'jobs': 'werkervaring',
+      'beroepen': 'werkervaring',
+      'education': 'opleidingen',
+      'opleidingen': 'opleidingen',
+      'opleiding': 'opleidingen',
+      'wishes': 'wensberoepen',
+      'wensberoep': 'wensberoepen',
+    };
+
+    function handle(section, data) {
+      const key = aliases[section] || section;
+      if (handlers[key]) {
+        handlers[key](data);
+      } else {
+        console.warn('Onbekende section:', section, data);
+      }
+    }
+
+    // ----- Reset -----
+    function resetDemo() {
+      fetch('/api/reset', { method: 'POST' })
+        .then(() => location.reload());
+    }
+
+    // ----- SSE-verbinding -----
+    function connect() {
+      const es = new EventSource('/events');
+
+      es.onopen = () => {
+        connDot.classList.add('connected');
+        connText.textContent = 'Live';
+      };
+
+      es.onerror = () => {
+        connDot.classList.remove('connected');
+        connText.textContent = 'Verbinding verbroken';
+      };
+
+      es.onmessage = (ev) => {
+        try {
+          const evt = JSON.parse(ev.data);
+          console.log('[SSE]', evt);
+          if (evt.section === '__reset__') {
+            location.reload();
+            return;
+          }
+          handle(evt.section, evt.data || {});
+        } catch (err) {
+          console.error('SSE parse error:', err, ev.data);
+        }
+      };
+    }
+
+    connect();
+  </script>
+</body>
+</html>
