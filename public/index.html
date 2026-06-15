@@ -394,18 +394,14 @@
       cursor: pointer;
     }
     .btn-reset {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
       background: #fef2f2;
       color: #b91c1c;
       border: 1px solid #fecaca;
-      padding: 0.4rem 0.8rem;
+      padding: 0.45rem 0.9rem;
       border-radius: 6px;
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      z-index: 200;
       opacity: 0.6;
     }
     .btn-reset:hover { opacity: 1; }
@@ -443,17 +439,13 @@
     /* ===== Stellar widget kleuren via CSS-variabelen (Shadow DOM erfelijk) ===== */
     stellar-chat-widget {
       --primary: #6354c4;
-      --surface-raised: #d4ede9;
+      --surface-raised: #e7a6c5;
       --surface: #ffffff;
     }
   </style>
 </head>
 <body>
 
-  <div class="conn-indicator" id="conn">
-    <span class="conn-dot" id="connDot"></span>
-    <span id="connText">Verbinden…</span>
-  </div>
   <button class="btn-reset" onclick="resetDemo()">Reset demo</button>
 
   <header>
@@ -463,12 +455,10 @@
       </div>
       <nav class="nav-tabs">
         <a href="#" class="nav-tab active">Skillsprofiel</a>
-        <a href="#" class="nav-tab">Vacatures</a>
       </nav>
     </div>
     <div class="header-right">
-      <div class="lang-pill">🌐 NL</div>
-      <div class="avatar"></div>
+      <button class="btn-reset" onclick="resetDemo()">Reset demo</button>
     </div>
   </header>
 
@@ -597,7 +587,6 @@
 
   <div class="action-bar">
     <button class="btn-primary">+ Skills toevoegen</button>
-    <button class="btn-secondary">↗ Deel</button>
   </div>
 
   <!-- ============ Stellar Chat Widget ============ -->
@@ -614,6 +603,7 @@
           primaryColor: "#6354c4",
           title: "Job, Skillprofiel Builder",
           position: "bottom-right",
+          hidePoweredBy: true,
           strings: {
             welcomeAI: "Ik ben Job, laten we samen jouw skillprofiel opbouwen!",
             placeholder: "Laten we beginnen!",
@@ -626,10 +616,6 @@
 
   <!-- ============ Live update logica ============ -->
   <script>
-    // ----- Connectie-indicator -----
-    const connDot = document.getElementById('connDot');
-    const connText = document.getElementById('connText');
-
     // ----- State (welke secties hebben data) -----
     const completed = new Set();
 
@@ -871,15 +857,8 @@
     function connect() {
       const es = new EventSource('/events');
 
-      es.onopen = () => {
-        connDot.classList.add('connected');
-        connText.textContent = 'Live';
-      };
-
-      es.onerror = () => {
-        connDot.classList.remove('connected');
-        connText.textContent = 'Verbinding verbroken';
-      };
+      es.onopen = () => {};
+      es.onerror = () => {};
 
       es.onmessage = (ev) => {
         try {

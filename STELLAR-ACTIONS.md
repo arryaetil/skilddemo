@@ -6,7 +6,7 @@ Per action: **Name**, **Description**, **HTTP method**, **URL** (vervang ngrok-U
 Voor alle actions:
 - **Method**: `POST`
 - **Headers**: `Content-Type: application/json`
-- **Base URL**: `https://JOUW-NGROK-URL.ngrok-free.dev`
+- **Base URL**: `https://skilddemo-production.up.railway.app`
 
 ---
 
@@ -20,7 +20,7 @@ Updates the user's general information (NAW: name, email, location, age) on the 
 Call this after the user has confirmed their personal details from the CV.
 ```
 
-**URL:** `https://JOUW-NGROK-URL.ngrok-free.dev/api/naw`
+**URL:** `https://skilddemo-production.up.railway.app/api/naw`
 
 **Parameters schema:**
 ```json
@@ -61,7 +61,7 @@ Always send the COMPLETE list of jobs (not just additions or changes).
 Call this after the user has confirmed or corrected their work experience from the CV.
 ```
 
-**URL:** `https://JOUW-NGROK-URL.ngrok-free.dev/api/werkervaring`
+**URL:** `https://skilddemo-production.up.railway.app/api/werkervaring`
 
 **Parameters schema:**
 ```json
@@ -108,7 +108,7 @@ Always send the COMPLETE list of skills accumulated so far in the conversation.
 Each skill defaults to a 3-star rating.
 ```
 
-**URL:** `https://JOUW-NGROK-URL.ngrok-free.dev/api/kennis`
+**URL:** `https://skilddemo-production.up.railway.app/api/kennis`
 
 **Parameters schema:**
 ```json
@@ -147,7 +147,7 @@ Always send the COMPLETE list of soft skills.
 Each skill defaults to a 3-star rating.
 ```
 
-**URL:** `https://JOUW-NGROK-URL.ngrok-free.dev/api/softskills`
+**URL:** `https://skilddemo-production.up.railway.app/api/softskills`
 
 **Parameters schema:**
 ```json
@@ -183,7 +183,7 @@ Updates the user's languages list on the live skill profile page.
 Always send the COMPLETE list of languages with their proficiency levels.
 ```
 
-**URL:** `https://JOUW-NGROK-URL.ngrok-free.dev/api/talen`
+**URL:** `https://skilddemo-production.up.railway.app/api/talen`
 
 **Parameters schema:**
 ```json
@@ -226,7 +226,7 @@ Updates the user's education list on the live skill profile page.
 Always send the COMPLETE list of educations.
 ```
 
-**URL:** `https://JOUW-NGROK-URL.ngrok-free.dev/api/opleidingen`
+**URL:** `https://skilddemo-production.up.railway.app/api/opleidingen`
 
 **Parameters schema:**
 ```json
@@ -272,7 +272,7 @@ Updates the user's desired professions (wensberoepen) on the live skill profile 
 Maximum 2 wensberoepen. Send the complete list, even if the user adds them one by one.
 ```
 
-**URL:** `https://JOUW-NGROK-URL.ngrok-free.dev/api/wensberoepen`
+**URL:** `https://skilddemo-production.up.railway.app/api/wensberoepen`
 
 **Parameters schema:**
 ```json
@@ -322,37 +322,37 @@ Maximum 2 wensberoepen. Send the complete list, even if the user adds them one b
 
 ```bash
 # NAW
-curl -X POST https://JOUW-NGROK-URL.ngrok-free.dev/api/naw \
+curl -X POST https://skilddemo-production.up.railway.app/api/naw \
   -H "Content-Type: application/json" \
   -d '{"first_name":"Robin","last_name":"Rabeling","email":"robin@example.com","location":"Heerlen","age":34}'
 
 # Werkervaring
-curl -X POST https://JOUW-NGROK-URL.ngrok-free.dev/api/werkervaring \
+curl -X POST https://skilddemo-production.up.railway.app/api/werkervaring \
   -H "Content-Type: application/json" \
   -d '{"jobs":[{"title":"Data scientist","company":"test","from":"januari 2017","to":"januari 2020"},{"title":"Data engineer","company":"test","from":"januari 2020","to":"heden"}]}'
 
 # Kennis
-curl -X POST https://JOUW-NGROK-URL.ngrok-free.dev/api/kennis \
+curl -X POST https://skilddemo-production.up.railway.app/api/kennis \
   -H "Content-Type: application/json" \
   -d '{"skills":["Python","SQL","Machine learning","Data visualisatie"]}'
 
 # Softskills
-curl -X POST https://JOUW-NGROK-URL.ngrok-free.dev/api/softskills \
+curl -X POST https://skilddemo-production.up.railway.app/api/softskills \
   -H "Content-Type: application/json" \
   -d '{"skills":["Analytisch","Creatief","Gemotiveerd","Verantwoordelijkheid"]}'
 
 # Talen
-curl -X POST https://JOUW-NGROK-URL.ngrok-free.dev/api/talen \
+curl -X POST https://skilddemo-production.up.railway.app/api/talen \
   -H "Content-Type: application/json" \
   -d '{"talen":[{"taal":"Nederlands","niveau":"Moedertaal"},{"taal":"Engels","niveau":"Vloeiend"}]}'
 
 # Opleidingen
-curl -X POST https://JOUW-NGROK-URL.ngrok-free.dev/api/opleidingen \
+curl -X POST https://skilddemo-production.up.railway.app/api/opleidingen \
   -H "Content-Type: application/json" \
   -d '{"opleidingen":[{"instituut":"Universiteit van Amsterdam","opleiding":"Analytical Chemistry","niveau":"Wo/bachelor","from":"januari 2016","to":"januari 2021"}]}'
 
 # Wensberoepen
-curl -X POST https://JOUW-NGROK-URL.ngrok-free.dev/api/wensberoepen \
+curl -X POST https://skilddemo-production.up.railway.app/api/wensberoepen \
   -H "Content-Type: application/json" \
   -d '{"wensberoepen":["Drone piloot"]}'
 ```
