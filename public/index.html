@@ -165,8 +165,11 @@
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      background: #d1d5db;
+      background: var(--skilld-purple);
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .naw-info { flex: 1; }
     .naw-name {
@@ -478,7 +481,11 @@
         <!-- NAW -->
         <section class="card" id="card-naw">
           <div class="naw">
-            <div class="naw-avatar"></div>
+            <div class="naw-avatar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="white">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+              </svg>
+            </div>
             <div class="naw-info">
               <div class="naw-name empty" id="naw-name">Nog niet bekend</div>
               <div class="naw-meta" id="naw-email"></div>
